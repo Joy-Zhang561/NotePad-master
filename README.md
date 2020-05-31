@@ -42,13 +42,14 @@
                       dataColumns,
                       viewIDs);
     ```
+    
 页面跳转：  
    不管是可选菜单、上下文菜单中的操作，还是单击列表中的笔记条目，其相应的页面跳转都是通过Intent的Action+URI进行的
     
     
 功能设计介绍
 -----
-####添加时间戳功能：  
+添加时间戳功能：  
 1.添加时间戳的位置在主页面的每个列表项中添加，即在notelist_item.xml布局文件中添加一个<TextView>  
     
    
@@ -63,29 +64,25 @@
    
     
  2.在NoteList类的PROJECTION中添加COLUMN_NAME_MODIFICATION_DATE字段(该字段在NotePad中有说明)  
- 
     ```Java
-        // The columns needed by the cursor adapter
-        private static final String[] PROJECTION = new String[] {    
-            NotePad.Notes._ID, // 0    
-            NotePad.Notes.COLUMN_NAME_TITLE, // 1    
-            NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE,//在这里加入了修改时间的显示    
-         };    
+    // The columns needed by the cursor adapter
+    private static final String[] PROJECTION = new String[] {    
+        NotePad.Notes._ID, // 0    
+        NotePad.Notes.COLUMN_NAME_TITLE, // 1    
+        NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE,//在这里加入了修改时间的显示    
+     };    
      ```
    
  3.修改适配器内容，增加dataColumns中装配到ListView的内容，所以要同时增加一个ID标识来存放该时间参数。  
- 
-     ```Java 
-        // The names of the cursor columns to display in the view, initialized to the title column
-        String[] dataColumns = { NotePad.Notes.COLUMN_NAME_TITLE,
-                NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE //增加时间参数} ;
-
-        // The view IDs that will display the cursor columns, initialized to the TextView in noteslist_item.xml
-        int[] viewIDs = { android.R.id.text1 ,android.R.id.text2};
-     ````
+    ```Java 
+    // The names of the cursor columns to display in the view, initialized to the title column
+    String[] dataColumns = { NotePad.Notes.COLUMN_NAME_TITLE,
+         NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE //增加时间参数} ;
+    // The view IDs that will display the cursor columns, initialized to the TextView in noteslist_item.xml
+    int[] viewIDs = { android.R.id.text1 ,android.R.id.text2};
+     ```
      
- 4.在NoteEditor文件的updateNote方法中获取当前系统的时间，并对时间进行格式化  
- 
+4.在NoteEditor文件的updateNote方法中获取当前系统的时间，并对时间进行格式化  
     ```Java
      // Sets up a map to contain values to be updated in the provider.   
         ContentValues values = new ContentValues();  
@@ -95,24 +92,23 @@
         Date d = new Date(now);  
         String format = sf.format(d);  
         values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, format);
-        ```
-        
- 5.显示结果为 
-      
+     ```
+     
+5.显示结果为 
   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/1.1.png) 
    
-    添加搜索框功能：
-    1.搜索组件在主页面的菜单选项中，所以应在list_options_menu.xml布局文件中添加搜索功能
+   
+添加搜索框功能：
+1.搜索组件在主页面的菜单选项中，所以应在list_options_menu.xml布局文件中添加搜索功能
     
      <item
         android:id="@+id/menu_search"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/menu_search"
         android:showAsAction="always" />
-        
-     
+   
     
-    2.新建一个查找笔记内容的布局文件note_search.xm;
+2.新建一个查找笔记内容的布局文件note_search.xm;
     
     <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -132,19 +128,19 @@
             />
     </LinearLayout>
         
-     3.在NoteList类中的onOptionsItemSelected方法中添加search查询的处理(跳转)
-        
+3.在NoteList类中的onOptionsItemSelected方法中添加search查询的处理(跳转)
+     ```Java  
     case R.id.menu_search:  
         //查找功能  
         //startActivity(new Intent(Intent.ACTION_SEARCH, getIntent().getData()));  
           Intent intent = new Intent(this, NoteSearch.class);  
           this.startActivity(intent);  
           return true;  
-              
-        4.新建一个NoteSearch类用于search功能的功能实现
+    ```
+    
+4.新建一个NoteSearch类用于search功能的功能实现
     
     package com.example.android.notepad;
-
     import android.app.Activity;
     import android.content.Intent;
     import android.database.Cursor;
@@ -155,24 +151,24 @@
     import android.widget.SimpleCursorAdapter;
     import android.widget.Toast;
 
-    public class NoteSearch extends Activity implements SearchView.OnQueryTextListener {
-
-    ListView listView;
-    SQLiteDatabase sqLiteDatabase;
-    /**
-     * The columns needed by the cursor adapter
-     */
-    private static final String[] PROJECTION = new String[]{
-            NotePad.Notes._ID, // 0
-            NotePad.Notes.COLUMN_NAME_TITLE, // 1
-            NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE//时间
+    public class NoteSearch extends Activity implements SearchView.OnQueryTextListener
+    {
+        ListView listView;
+        SQLiteDatabase sqLiteDatabase;
+        /**
+         * The columns needed by the cursor adapter
+         */
+        private static final String[] PROJECTION = new String[]{
+                NotePad.Notes._ID, // 0
+                NotePad.Notes.COLUMN_NAME_TITLE, // 1
+                NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE//时间
     };
 
     public boolean onQueryTextSubmit(String query) {
         Toast.makeText(this, "您选择的是："+query, Toast.LENGTH_SHORT).show();
         return false;
     }
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,9 +187,7 @@
         searchView.setQueryHint("查找");
         searchView.setOnQueryTextListener(this);
 
-
     }
-
     public boolean onQueryTextChange(String string) {
         String selection1 = NotePad.Notes.COLUMN_NAME_TITLE+" like ? or "+NotePad.Notes.COLUMN_NAME_NOTE+" like ?";
         String[] selection2 = {"%"+string+"%","%"+string+"%"};
@@ -206,8 +200,6 @@
                 null,          // don't filter by row groups
                 NotePad.Notes.DEFAULT_SORT_ORDER // The sort order
         );
-
-
         // The names of the cursor columns to display in the view, initialized to the title column
         String[] dataColumns = {
                 NotePad.Notes.COLUMN_NAME_TITLE,
@@ -233,19 +225,20 @@
         return true;
     }
     }
+    ```
     
-    5.最后要在清单文件AndroidManifest.xml里面注册NoteSearch,否则无法实现界面的跳转
-    
-    <activity android:name=".NoteSearch" android:label="@string/search_note" />
+5.最后要在清单文件AndroidManifest.xml里面注册NoteSearch,否则无法实现界面的跳转
+
+   <activity android:name=".NoteSearch" android:label="@string/search_note" />
    
-    6.结果如下图
+6.结果如下图
     
    ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/2.1.png)
    ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/2.2.png)
    
 遇到的问题
 -----
-    1.时间格式显示错误，如下图
+1.时间格式显示错误，如下图
     
   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.1.png)
   
@@ -262,7 +255,7 @@
     发现这个问题后，直接将转化时间格式的代码编写在updateNote方法中，并修改values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, format)后，时间显示正确，该问题得到解决
     
     
-    2.点击查询，界面无法跳转
+2.点击查询，界面无法跳转
     
     编写完成后要在清单文件AndroidManifest.xml里面注册NoteSearch,否则无法实现界面的跳转
     
