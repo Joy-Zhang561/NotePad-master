@@ -60,4 +60,5 @@ list_options_menu.xml 笔记主页面的菜单布局<br>
         String format = sf.format(d);
         values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, format);
 5.显示结果为
-  ！[image]
+  ![image](Picture/1.1.png)
+  
