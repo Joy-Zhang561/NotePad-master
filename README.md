@@ -60,7 +60,7 @@
         
       5.显示结果为 
       
-  ![](https://github.com/Joy-Zhang561/NotePad-master/row/master/Picture/1.1.png) 
+  ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/1.1.png) 
    
     添加搜索框功能：
     1.搜索组件在主页面的菜单选项中，所以应在list_options_menu.xml布局文件中添加搜索功能
@@ -201,8 +201,8 @@
    
     6.结果如下图
     
-   ![](https://github.com/Joy-Zhang561/NotePad-master/row/master/Picture/2.1.png)
-   ![](https://github.com/Joy-Zhang561/NotePad-master/row/master/Picture/2.2.png)
+   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/2.1.png)
+   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/2.2.png)
 
      
         
