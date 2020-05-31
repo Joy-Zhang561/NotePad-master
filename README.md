@@ -23,17 +23,17 @@
     
 数据装配：  
     NoteList使用SimpleCursorAdapter来装配数据，首先查询数据库的内容  
-    ```Java
+    
     Cursor cursor = managedQuery(
             getIntent().getData(),           
             PROJECTION,                      
             null,                             
             null,                             
             NotePad.Notes.DEFAULT_SORT_ORDER);
-     ```  
+       
             
    然后通过SimpleCursorAdapter来进行装配   
-    ```Java
+    
     SimpleCursorAdapter adapter
             = new SimpleCursorAdapter(
                       this,                             
@@ -41,7 +41,7 @@
                       cursor,                           
                       dataColumns,
                       viewIDs);
-    ```
+   
     
 页面跳转：  
    不管是可选菜单、上下文菜单中的操作，还是单击列表中的笔记条目，其相应的页面跳转都是通过Intent的Action+URI进行的
@@ -64,26 +64,26 @@
    
     
  2.在NoteList类的PROJECTION中添加COLUMN_NAME_MODIFICATION_DATE字段(该字段在NotePad中有说明)  
-    ```Java
+   
     // The columns needed by the cursor adapter
     private static final String[] PROJECTION = new String[] {    
         NotePad.Notes._ID, // 0    
         NotePad.Notes.COLUMN_NAME_TITLE, // 1    
         NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE,//在这里加入了修改时间的显示    
      };    
-     ```
+     
    
  3.修改适配器内容，增加dataColumns中装配到ListView的内容，所以要同时增加一个ID标识来存放该时间参数。  
-    ```Java 
+   
     // The names of the cursor columns to display in the view, initialized to the title column
     String[] dataColumns = { NotePad.Notes.COLUMN_NAME_TITLE,
          NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE //增加时间参数} ;
     // The view IDs that will display the cursor columns, initialized to the TextView in noteslist_item.xml
     int[] viewIDs = { android.R.id.text1 ,android.R.id.text2};
-     ```
+     
      
 4.在NoteEditor文件的updateNote方法中获取当前系统的时间，并对时间进行格式化  
-    ```Java
+    
      // Sets up a map to contain values to be updated in the provider.   
         ContentValues values = new ContentValues();  
      // 转化时间格式
@@ -92,7 +92,7 @@
         Date d = new Date(now);  
         String format = sf.format(d);  
         values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, format);
-     ```
+     
      
 5.显示结果为 
   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/1.1.png) 
@@ -129,14 +129,14 @@
     </LinearLayout>
         
 3.在NoteList类中的onOptionsItemSelected方法中添加search查询的处理(跳转)
-     ```Java  
+      
     case R.id.menu_search:  
         //查找功能  
         //startActivity(new Intent(Intent.ACTION_SEARCH, getIntent().getData()));  
           Intent intent = new Intent(this, NoteSearch.class);  
           this.startActivity(intent);  
           return true;  
-    ```
+    
     
 4.新建一个NoteSearch类用于search功能的功能实现
     
@@ -229,7 +229,7 @@
     
 5.最后要在清单文件AndroidManifest.xml里面注册NoteSearch,否则无法实现界面的跳转
 
-   <activity android:name=".NoteSearch" android:label="@string/search_note" />
+    <activity android:name=".NoteSearch" android:label="@string/search_note" />
    
 6.结果如下图
     
