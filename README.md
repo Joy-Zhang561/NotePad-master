@@ -93,12 +93,12 @@
         String format = sf.format(d);  
         values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, format);
      
-     
-5.显示结果为 
+5.显示结果为
+
   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/1.1.png) 
    
    
-添加搜索框功能：
+添加搜索框功能：  
 1.搜索组件在主页面的菜单选项中，所以应在list_options_menu.xml布局文件中添加搜索功能
     
      <item
@@ -242,22 +242,35 @@
     
   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.1.png)
   
+  
+  
     解决方法：初步认为是SimpleCursorAdapter数据前端显示错误
     众所周知，用SimpCursorAdapter可以很方便的把数据库中的数据绑定到前台显示，但是有时候数据库中取出的数据，并不是我们要直接显示的数据，而是想稍作修改再表示出来，比如时间在数据库中一般是以毫秒（milisecond）显示，但此时你需要的数据可能是采用时分秒的形式表示
     根据博主的表述，我对我的代码进行了修改，但结果不尽人意
     
+    
   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.3.png)
+  
+  
   
     很明显，这并不是该错误出现的原因，在多次尝试后发现在NoteEditor文件的updateNote方法中，并没有将时间的格式进行修改，时间的获取仍是System.currentTimeMillis()，如下图
     
+    
+    
    ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.4.png)
+   
+   
+   
     
     发现这个问题后，直接将转化时间格式的代码编写在updateNote方法中，并修改values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, format)后，时间显示正确，该问题得到解决
     
     
 2.点击查询，界面无法跳转
+
+
     
     编写完成后要在清单文件AndroidManifest.xml里面注册NoteSearch,否则无法实现界面的跳转
+    
     
    ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.2.png)
     
