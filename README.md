@@ -8,16 +8,44 @@
     NoteEditor类 编辑笔记内容的Activity   
     TitleEditor类 编辑笔记标题的Activity  
     NoteSearch类 编辑查询笔记内容的Activity  
-    NotePadProvider 这是笔记本应用的ContentProvider，也是整个应用的关键所在  
+    NotePadProvider 这是笔记本应用的ContentProvider，也是整个应用的关键所在 
+    
     主要的布局文件：  
     note_editor.xml 笔记主页面布局  
     note_search.xml 笔记内容查询布局  
     notelist_item.xml 笔记主页面每个列表项布局  
     title_editor.xml 修改笔记主题布局 
+    
     主要的菜单文件： 
     editor_options_menu.xml 编辑笔记内容的菜单布局 
-    list_context_menu.xml 笔记内容编辑功能菜单布局 
-    list_options_menu.xml 笔记主页面的菜单布局 
+    list_context_menu.xml 笔记内容编辑上下文菜单布局 
+    list_options_menu.xml 笔记主页面可选菜单布局 
+    
+    数据装配：
+    NoteList使用SimpleCursorAdapter来装配数据，首先查询数据库的内容
+    
+    Cursor cursor = managedQuery(
+            getIntent().getData(),           
+            PROJECTION,                      
+            null,                             
+            null,                             
+            NotePad.Notes.DEFAULT_SORT_ORDER);
+            
+            
+    然后通过SimpleCursorAdapter来进行装配
+    
+    SimpleCursorAdapter adapter
+            = new SimpleCursorAdapter(
+                      this,                             
+                      R.layout.noteslist_item,          
+                      cursor,                           
+                      dataColumns,
+                      viewIDs);
+
+    页面跳转：
+    不管是可选菜单、上下文菜单中的操作，还是单击列表中的笔记条目，其相应的页面跳转都是通过Intent的Action+URI进行的
+    
+    
 功能设计介绍
 -----
     添加时间戳功能：
@@ -203,7 +231,32 @@
     
    ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/2.1.png)
    ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/2.2.png)
-
+   
+遇到的问题
+-----
+    1.时间格式显示错误，如下图
+    
+  ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.1.png)
+  
+    解决方法：初步认为是SimpleCursorAdapter数据前端显示错误
+    众所周知，用SimpCursorAdapter可以很方便的把数据库中的数据绑定到前台显示，但是有时候数据库中取出的数据，并不是我们要直接显示的数据，而是想稍作修改再表示出来，比如时间在数据库中一般是以毫秒（milisecond）显示，但此时你需要的数据可能是采用时分秒的形式表示
+    根据博主的表述，我对我的代码进行了修改，但结果不尽人意
+    
+  ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.3.png)
+  
+    很明显，这并不是该错误出现的原因，在多次尝试后发现在NoteEditor文件的updateNote方法中，并没有将时间的格式进行修改，时间的获取仍是System.currentTimeMillis()，如下图
+    
+   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.4.png)
+    
+    发现这个问题后，直接将转化时间格式的代码编写在updateNote方法中，并修改values.put(NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE, format)后，时间显示正确，该问题得到解决
+    
+    
+    2.点击查询，界面无法跳转
+    
+    编写完成后要在清单文件AndroidManifest.xml里面注册NoteSearch,否则无法实现界面的跳转
+    
+   ![](https://github.com/Joy-Zhang561/NotePad-master/raw/master/Picture/3.2.png)
+    
      
         
   
